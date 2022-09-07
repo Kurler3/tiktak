@@ -5,7 +5,7 @@ import {useState, useEffect} from 'react';
 
 // COMPONENTS
 import Navbar from '../components/Navbar';
-import Sidebar from '../components/Sidebar';
+import Sidebar from '../components/Sidebar/Sidebar';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   
