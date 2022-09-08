@@ -3,8 +3,6 @@ import axios from 'axios';
 
 // VIDEO TYPE
 import { Video } from '../types';
-import VideoCard from '../components/MainContentComponents/VideoCard';
-import NoResults from '../components/MainContentComponents/NoResults';
 
 
 interface Iprops { 
@@ -18,21 +16,7 @@ const Home: NextPage<Iprops> = ({ videos }) => {
   
   return (
     <div className='flex flex-col gap-10 videos h-full'>
-      {
-        videos.length > 0 ?
 
-        videos.map((video, index) => {
-          
-          return (
-            <VideoCard 
-              key={`main_content_video_card_${video._id}_${index}`}
-              post={video}
-            />
-          )
-        })
-      :
-        <NoResults text="No Videos"/>
-      } 
     </div>
   )
 }

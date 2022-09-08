@@ -6,8 +6,9 @@ import {GoogleLogin, GoogleLogout} from 'react-google-login';
 import {AiOutlineLogout} from 'react-icons/ai';
 import {BiSearch} from 'react-icons/bi';
 import {IoMdAdd} from 'react-icons/io';
-import Logo from '../utils/tiktik-logo.png';
 
+// import Logo from '../utils/tiktik-logo.png';
+const Logo = require('../utils/tiktik-logo.png');
 
 const Navbar = () => {
   return (
@@ -21,6 +22,7 @@ const Navbar = () => {
                     src={Logo}
                     alt="TikTak"
                     layout="responsive"
+
                 />
             </div>
         </Link>

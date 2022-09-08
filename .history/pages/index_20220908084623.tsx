@@ -31,7 +31,7 @@ const Home: NextPage<Iprops> = ({ videos }) => {
           )
         })
       :
-        <NoResults text="No Videos"/>
+        <NoResults />
       } 
     </div>
   )

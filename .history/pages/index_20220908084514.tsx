@@ -4,7 +4,6 @@ import axios from 'axios';
 // VIDEO TYPE
 import { Video } from '../types';
 import VideoCard from '../components/MainContentComponents/VideoCard';
-import NoResults from '../components/MainContentComponents/NoResults';
 
 
 interface Iprops { 
@@ -31,7 +30,7 @@ const Home: NextPage<Iprops> = ({ videos }) => {
           )
         })
       :
-        <NoResults text="No Videos"/>
+        <span>No Posts....</span>
       } 
     </div>
   )

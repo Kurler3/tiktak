@@ -63,8 +63,7 @@ const Sidebar = () => {
 
                                 <div className="pr-4">
                                     <GoogleLogin 
-                                    //TODO NEED TO GET CLIENT ID!!
-                                        clientId='Mock'
+                                        clientId=''
                                         onSuccess={() => {}}
                                         onFailure={() => {}}
                                         cookiePolicy="single_host_origin"
