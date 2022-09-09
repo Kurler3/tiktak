@@ -19,8 +19,6 @@ const VideoCard:React.FC<IProps> = ({post}) => {
     isHovering: false,
     // IF IS PLAYING VIDEO
     playing: false,
-    // IF VIDEO IS MUTED
-    isVideoMuted: false,
   });
 
 
@@ -89,17 +87,6 @@ const VideoCard:React.FC<IProps> = ({post}) => {
               <div className='absolute '>
 
                 {/* PLAY/PAUSE BTN */}
-                <button
-                  
-                >
-                   {
-                    state.playing ?
-
-                    <BsFillPauseFill />
-                    :
-                    <BsFillPlayFill />
-                   } 
-                </button>  
 
 
                 {/* MUTE/UNMUTE BTN */}

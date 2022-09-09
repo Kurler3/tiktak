@@ -13,19 +13,8 @@ interface IProps {
 
 const VideoCard:React.FC<IProps> = ({post}) => {
 
-  // HOVERING STATE
-  const [state, setState] = useState({
-    // IF IS HOVERING VIDEO
-    isHovering: false,
-    // IF IS PLAYING VIDEO
-    playing: false,
-    // IF VIDEO IS MUTED
-    isVideoMuted: false,
-  });
 
-
-
-  return (  
+  return (
     <div className='flex flex-col border-b-2 border-gray-200 pb-6'>
       {/* WRAPPER */}
       <div className=''>
@@ -67,46 +56,16 @@ const VideoCard:React.FC<IProps> = ({post}) => {
 
       {/* VIDEO */}
       <div className='lg:ml-20 flex gap-4 relative'>
-        <div className='rounded-3xl'
-            onMouseEnter={() => setState((prevState) => ({...prevState, isHovering: true}))}
-            onMouseLeave={() => setState((prevState) => ({...prevState, isHovering: false}))}
-        >
+        <div className='rounded-3xl'>
           {/* LEADS TO VIDEO DETAILS PAGW */}
           <Link href="/">
             <video
-              // loop
-              // controls
+              loop
+              controls
               src={post.video.asset.url}
-              className="lg:w-[600px] h-[300px] md:h-[400px] lg:h-[530px] w-[200px] rounded-2xl cursor-pointer" 
+              className="lg:w-[600px] h-[300px] md:h-[400px] lg:h-[530px] w-[200px]"
             ></video>
           </Link>
-
-          {/* VIDEO CONTROLS WHEN HOVERING */}
-          {
-            state.isHovering &&
-
-            (
-              <div className='absolute '>
-
-                {/* PLAY/PAUSE BTN */}
-                <button
-                  
-                >
-                   {
-                    state.playing ?
-
-                    <BsFillPauseFill />
-                    :
-                    <BsFillPlayFill />
-                   } 
-                </button>  
-
-
-                {/* MUTE/UNMUTE BTN */}
-
-              </div>
-            )
-          }
         </div>
       </div>
     </div>
