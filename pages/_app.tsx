@@ -3,6 +3,8 @@ import type { AppProps } from 'next/app'
 
 import {useState, useEffect} from 'react';
 
+import { GoogleOAuthProvider } from '@react-oauth/google';
+
 // COMPONENTS
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar/Sidebar';
@@ -21,8 +23,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 
   // NOT IN SERVER-SIDE, SO RENDERING FROM CLIENT --- OK
   return (
-    <div>
-
+    <GoogleOAuthProvider clientId={`${process.env.NEXT_PUBLIC_GOOGLE_API_TOKEN}`}>
       {/* NAVBAR */}
       <Navbar />
       
@@ -40,7 +41,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
           </div>
          
       </div>
-    </div>
+    </GoogleOAuthProvider>
   )
 }
 

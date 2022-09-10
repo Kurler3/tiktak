@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react'
+import React, {useState, useEffect, useRef, useCallback} from 'react'
 import { Video } from '../../types';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -20,10 +20,43 @@ const VideoCard:React.FC<IProps> = ({post}) => {
     // IF IS PLAYING VIDEO
     playing: false,
     // IF VIDEO IS MUTED
-    isVideoMuted: false,
+    isVideoMuted: true,
   });
 
+  // VIDEO REF
+  const videoRef = useRef<HTMLVideoElement>(null);
 
+
+  // FUNCTIONS
+
+  const onVideoPress = useCallback(() => {
+    setState((prevState) => {
+
+      if(prevState.playing) videoRef?.current?.pause();
+      else videoRef?.current?.play();
+
+      return {
+        ...prevState,
+        playing: !prevState.playing,
+      };
+    });
+  }, []);
+
+  // MUTE/UNMUTE VIDEO
+  const onVideoMuteUnmute = useCallback(() => {
+
+    setState((prevState) => {
+      if(videoRef.current) {
+        if(prevState.isVideoMuted) videoRef.current.muted = false;
+        else videoRef.current.muted = true;
+      }
+      return {
+        ...prevState,
+        isVideoMuted: !prevState.isVideoMuted,
+      }
+    });
+
+  } ,[]);
 
   return (  
     <div className='flex flex-col border-b-2 border-gray-200 pb-6'>
@@ -74,8 +107,8 @@ const VideoCard:React.FC<IProps> = ({post}) => {
           {/* LEADS TO VIDEO DETAILS PAGW */}
           <Link href="/">
             <video
-              // loop
-              // controls
+              loop
+              ref={videoRef}
               src={post.video.asset.url}
               className="lg:w-[600px] h-[300px] md:h-[400px] lg:h-[530px] w-[200px] rounded-2xl cursor-pointer" 
             ></video>
@@ -86,27 +119,43 @@ const VideoCard:React.FC<IProps> = ({post}) => {
             state.isHovering &&
 
             (
-              <div className='absolute '>
+              <div className='absolute bottom-24 cursor-pointer left-2'>
 
                 {/* PLAY/PAUSE BTN */}
                 <button
-                  
+                   onClick={onVideoPress} 
                 >
                    {
                     state.playing ?
 
-                    <BsFillPauseFill />
+                    <BsFillPauseFill className="text-black text-2xl lg:text-4xl"/>
                     :
-                    <BsFillPlayFill />
+                    <BsFillPlayFill className="text-black text-2xl lg:text-4xl"/>
                    } 
                 </button>  
 
 
                 {/* MUTE/UNMUTE BTN */}
+                <button
+                  onClick={onVideoMuteUnmute}
+                >
+
+                   {
+                    state.isVideoMuted ?
+                   
+                    <HiVolumeOff className="text-black text-2xl lg:text-4xl"/>
+
+                    :
+                    <HiVolumeUp className="text-black text-2xl lg:text-4xl"/>
+                  }
+
+                </button>
 
               </div>
             )
           }
+
+    
         </div>
       </div>
     </div>
