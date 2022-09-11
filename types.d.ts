@@ -1,3 +1,10 @@
+export interface GoogleDecodedToken {
+    name: string;
+    picture: string;
+    // UNIQUE ID
+    sub: string;
+}
+
 export interface IPostedBy {
     _id: string;
     userName: string;

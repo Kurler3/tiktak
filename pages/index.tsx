@@ -13,9 +13,7 @@ interface Iprops {
 
 const Home: NextPage<Iprops> = ({ videos }) => {
 
-  console.log(videos)
 
-  
   return (
     <div className='flex flex-col gap-10 videos h-full'>
       {

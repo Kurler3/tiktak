@@ -40,3 +40,7 @@ export const topics = [
 export const footerList1 = ['About', 'Newsroom', 'Store', 'Contact', 'Carrers', 'ByteDance', 'Creator Directory']
 export const footerList2 = [ 'TikTik for Good','Advertise','Developers','Transparency','TikTik Rewards' ]
 export const footerList3 = [ 'Help', 'Safety', 'Terms', 'Privacy', 'Creator Portal', 'Community Guidelines' ]
+
+
+// FILE TYPES AVAILABLE FOR UPLOAD
+export const FILE_TYPES_AVAILABLE = ['video/mp4', 'video/webm', 'video/ogg'];
