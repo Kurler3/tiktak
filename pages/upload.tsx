@@ -6,7 +6,17 @@ import axios from 'axios';
 import useAuthStore from '../store/authStore';
 import {client} from '../utils/client';
 import { FILE_TYPES_AVAILABLE } from '../utils/constants';
+import { SanityAssetDocument } from '@sanity/client';
+import {topics} from '../utils/constants';
 
+interface IState {
+    isLoading: boolean;
+    videoAsset: SanityAssetDocument | null;
+    isWrongFileType: boolean;
+    captionText: string;
+    category: string;
+    isSavingPost: boolean;
+}
 
 //////////////////////
 // UPLOAD COMPONENT///
@@ -14,14 +24,21 @@ import { FILE_TYPES_AVAILABLE } from '../utils/constants';
 
 const Upload = () => {
 
+    // UPLOAD BTN STYLE
+    const disabledUploadBtnStyle = "bg-[#F51997] opacity-40 text-white text-md font-medium p-2 rounded w-28 lg:w-44 outline-none";
+
+    const normalUploadBtnStyle = "bg-[#F51997] text-white text-md font-medium p-2 rounded w-28 lg:w-44 outline-none hover:scale-[1.1] transition";
     //////////////
     // STATE  ////
     //////////////
 
-    const [state, setState] = useState({
+    const [state, setState] = useState<IState>({
         isLoading: false,
         videoAsset: null,
-        setWrongFileType: false,
+        isWrongFileType: false,
+        captionText: '',
+        category: topics[0].name,
+        isSavingPost: false,
     });
 
     //////////////////
@@ -38,7 +55,30 @@ const Upload = () => {
         // IF VALID
         if(isTypeValid) {
 
-            // UPLOAD!
+            // UPLOAD TO CLIENTS ASSETS
+            const videoAsset = await client.assets.upload(
+                // TYPE OF ASSET
+                "file",
+                // FILE ITSELF
+                selectedFile,
+                // OPTIONS
+                {
+                    // TYPE OF THE CONTENT OF THE FILE
+                    contentType: selectedFile.type,
+                    filename: selectedFile.name,
+                }
+            );
+
+            setState((prevState) => {
+                return {
+                    ...prevState,
+                    videoAsset: videoAsset,
+                    isLoading: false,
+                    isWrongFileType: false,
+                }
+            });
+
+
         }
         else {
             // LOADING TO FALSE + WRONG FILE TYPE
@@ -46,7 +86,7 @@ const Upload = () => {
               return {
                 ...prevState,
                 isLoading: false,
-                setWrongFileType: true,
+                isWrongFileType: true,
               }      
             });
         }
@@ -54,16 +94,33 @@ const Upload = () => {
     }, []);
 
 
+    const handlePost = useCallback(async () => {
+
+        const isCaptionFilled = state.captionText !== "";
+
+        const isVideoSelected = state.videoAsset?._id !== null;
+
+        if(isCaptionFilled && isVideoSelected) {
+            //  CONTINUE SAVING
+            
+        }
+        
+
+
+    }, []);
+
 
     //////////////
     // RENDER ////
     //////////////
 
     return (
-        <div className='flex w-full h-full'>
+        <div className='flex w-full h-full absolute left-0 top-[60px] mb-10 pt-10 lg:pt-20 bg-[#F8F8F8] justify-center'>
 
             {/*  */}
-            <div className='bg-white rounded-lg'>
+            <div 
+                className='bg-white rounded-lg xl:h-[80vh] flex gap-6 flex-wrap justify-around items-center p-14 pt-6 w-[60%]'
+            >
 
                 {/* WRAPPER DIV*/}
                 <div>
@@ -79,7 +136,7 @@ const Upload = () => {
                     <div 
                         className='border-dashed rounded-xl border-4 border-gray-200 
                         flex flex-col justify-center items-center outline-none mt-10 w-[260px] h-[460px] 
-                        p-10 cursor-pointer hover:border-red-300 hover:bg-gray-100 transition
+                        p-10 cursor-pointer hover:border-red-300 hover:bg-gray-100 transition relative
                         '
                     >
                         {
@@ -91,8 +148,15 @@ const Upload = () => {
                                     {
                                         state.videoAsset ?
                                         (
-                                            <div>
-                                                
+                                            <div className='h-[440px] w-[230px]'>
+                                                <video
+                                                    src={state.videoAsset.url}
+                                                    loop
+                                                    controls
+                                                    className='rounded-xl bg-black h-full w-full'
+                                                >
+
+                                                </video>
                                             </div>
                                         )
                                         :
@@ -131,10 +195,96 @@ const Upload = () => {
                                 </div>
                             )   
                         }
+
+                        {/* IF WRONG FILE TYPE ERROR */}
+                        {
+                            state.isWrongFileType === true && (
+                                <p className='text-center text-md absolute bottom-[-35px] text-red-400 font-semibold w-[250px]'>
+                                    Please select a valid video file
+                                </p>
+                            )
+                        }
+
                     </div>
                 
+
                 </div>
 
+
+                 {/* FORM */}
+                <div className='flex flex-col gap-3 pb-10'>
+                    <label
+                        className='text-md font-medium'
+                    >
+                        Caption
+                    </label>
+
+                    <input 
+                        type="text"
+                        value={state.captionText}
+                        onChange={(e) => setState((prevState) => {
+                            return {
+                                ...prevState,
+                                captionText: e.target.value,
+                            }
+                        })}
+                        className="rounded outline-none text-md border-2 border-gray-200 p-2"
+                    />
+
+                    <label className='text-md font-medium'>
+                        Choose a Category
+                    </label>
+                    
+                    <select
+                        className='outline-none border-2 border-gray-200 text-md capitalize lg:p-4 p-2 rounded cursor-pointer'
+                        onChange={(e) => setState((prevState) => {
+                            return {
+                                ...prevState,
+                                category: e.target.value,
+                            }
+                        })}
+                        value={state.category}
+                    >
+                        {
+                            topics.map((topic, index) => (
+                                <option key={`upload_topic_${topic.name}_${index}`}
+                                    className="outline-none capitalize bg-white text-gray-700 text-md p-2 hover:bg-slate-300"
+                                    value={topic.name}
+                                >
+                                    {topic.name}
+                                </option>
+                            ))
+                        }
+                    </select>    
+                    
+                    {/* BTNS CONTAINER */}
+                    <div
+                        className='flex gap-6 mt-10'
+                    >
+                        {/* DISCARD BTN */}
+                        <button
+                            onClick={() => {}}
+                            type="button"
+                            className='border-gray-300 border-2 text-md font-medium p-2 rounded w-28 lg:w-44 outline-none hover:scale-[1.1] transition'
+                        >
+                            Discard
+                        </button>
+
+                        {/* POST BTN */}
+                        <button
+                            onClick={handlePost}
+                            type="button"
+                            className={state.videoAsset === null || state.captionText === "" ? disabledUploadBtnStyle : normalUploadBtnStyle}
+                            disabled={
+                                state.videoAsset === null || state.captionText.length === 0
+                            }
+                        >
+                            Post
+                        </button>
+
+                    </div>
+
+                </div>
             </div>
 
         </div>
