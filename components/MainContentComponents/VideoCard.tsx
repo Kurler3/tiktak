@@ -105,7 +105,7 @@ const VideoCard:React.FC<IProps> = ({post}) => {
             onMouseLeave={() => setState((prevState) => ({...prevState, isHovering: false}))}
         >
           {/* LEADS TO VIDEO DETAILS PAGW */}
-          <Link href="/">
+          <Link href={`/post/${post._id}`}>
             <video
               loop
               ref={videoRef}

@@ -28,6 +28,11 @@ const Upload = () => {
     const disabledUploadBtnStyle = "bg-[#F51997] opacity-40 text-white text-md font-medium p-2 rounded w-28 lg:w-44 outline-none";
 
     const normalUploadBtnStyle = "bg-[#F51997] text-white text-md font-medium p-2 rounded w-28 lg:w-44 outline-none hover:scale-[1.1] transition";
+
+
+    // INIT ROUTER
+    const router = useRouter();
+
     //////////////
     // STATE  ////
     //////////////
@@ -40,6 +45,9 @@ const Upload = () => {
         category: topics[0].name,
         isSavingPost: false,
     });
+
+    // GET USER FROM ZUSTAND
+    const {userProfile} = useAuthStore();
 
     //////////////////
     // FUNCTIONS  ////
@@ -96,18 +104,73 @@ const Upload = () => {
 
     const handlePost = useCallback(async () => {
 
-        const isCaptionFilled = state.captionText !== "";
-
-        const isVideoSelected = state.videoAsset?._id !== null;
-
-        if(isCaptionFilled && isVideoSelected) {
-            //  CONTINUE SAVING
+        try {
             
+            const isCaptionFilled = state.captionText !== "";
+
+            const isVideoSelected = state.videoAsset?._id !== null;
+    
+            if(isCaptionFilled && isVideoSelected) {
+                //  CONTINUE SAVING
+                
+                // SET SAVING POST TO TRUE
+                setState((prevState) => ({...prevState, isSavingPost: true}));
+    
+                // FORM NEW DOC TO SAVE IN SANITY
+                const newDoc = {
+                    _type: "post",
+                    caption: state.captionText,
+                    video: {
+                        // TYPE OF THE VIDEO PROPERTY
+                        _type: 'file',
+                        // ASSET REFERENCES TO THE VIDEO UPLOADED TO SANITY ASSETS
+                        asset: {
+                            // TYPE OF THE ASSET PROPERTY OF THE VIDEO PROPERTY
+                            _type: "reference",
+                            // REFERS TO THE VIDEO UPLOADED PREVIOUSLY
+                            _ref: state.videoAsset?._id,
+                        },
+                    },
+                    // USER ID OF THE PERSON THAT CREATED THIS POST
+                    userId: userProfile?._id,
+                    // REFERENCE TOT THE USER DOCUMENT
+                    postedBy: {
+                        _type: 'postedBy',
+                        _ref: userProfile?._id,
+                    },
+                    // LIKES ARRAY (initially emptyA)
+                    likes: [],
+                    // COMMENTS ARRAY (initially empty)
+                    comments: [],
+                    // TOPIC 
+                    topic: state.category,
+                };
+    
+                // CALL OWN BACK-END ROUTE!
+                await axios.post( 
+                    // URL
+                    'http://localhost:3000/api/post',
+                    // DATA
+                    newDoc,
+                );
+                    
+                // SET NOT SAVING ANYMORE
+                setState((prevState) => {
+                    return {
+                        ...prevState,
+                        isSavingPost: false,
+                    }
+                });
+
+                // REDIRECT BACK TO HOMEPAGE
+                router.push("/");
+            }
+
+        } catch (error) {
+            console.log("Error while saving post....", error);
         }
-        
 
-
-    }, []);
+    }, [router, state.captionText, state.category, state.videoAsset?._id, userProfile?._id]);
 
 
     //////////////

@@ -13,6 +13,9 @@ import useAuthStore from '../store/authStore';
 
 const Navbar = () => {
 
+  // INIT ROUTER
+  const router = useRouter();
+
   const {userProfile, addUser, logout} = useAuthStore();
 
   //////////////
@@ -92,6 +95,8 @@ const Navbar = () => {
                 googleLogout();
                 // STATE LOGOUT
                 logout();
+                // REDIRECT TO HOME PAGE
+                router.push("/");
               }}
             >
               <AiOutlineLogout fontSize={22} className="text-red-600"/>
