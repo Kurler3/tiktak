@@ -149,7 +149,7 @@ const Upload = () => {
                 // CALL OWN BACK-END ROUTE!
                 await axios.post( 
                     // URL
-                    'http://localhost:3000/api/post',
+                    `${process.env.NEXT_PUBLIC_BASE_URL}/api/post`,
                     // DATA
                     newDoc,
                 );

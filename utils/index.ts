@@ -18,7 +18,7 @@ export const createOrGetUser = async (response: CredentialResponse, addUser: any
   };
   
   // MAKE API CALL TO OWN BACK-END
-  await axios.post("http://localhost:3000/api/auth", user); 
+  await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth`, user); 
 
   // API CALL ----- OK
   // ADD TO STATE
