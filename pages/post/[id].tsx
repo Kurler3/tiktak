@@ -138,20 +138,22 @@ const PostDetail: NextPage<IProps> = ({
         // IF USER EXISTS
         if(userProfile) {
             // USE AXIOS.PUT TO UPDATE POST
-            const response = await axios.put(`${process.env.NEXT_PUBLIC_BASE_URL}/api/post/like`, {
+            const {data} = await axios.put(`${process.env.NEXT_PUBLIC_BASE_URL}/api/post/like`, {
                 userId: userProfile._id,
                 postId: state.post._id,
-                like: !isDisliking,
+                liking: !isDisliking,
             })
             
-            //TODO UPDATE THE CURRENT STATE AS WELL.
+            // UPDATE THE CURRENT STATE AS WELL.
             setState((prevState) => {
                 return {
                     ...prevState,
-                    // POST: response.....
+                    post: {
+                        ...prevState.post,
+                        likes: data.likes,
+                    }
                 }
             });
-
         }
 
     }, [state.post._id, userProfile]);
@@ -295,12 +297,15 @@ const PostDetail: NextPage<IProps> = ({
 
                     {/* LIKE BTN */}
                     <div
-                        className="mt-10 px-10"
+                        className="mt-10 px-10 w-fit"
                     >
                         {
                             userProfile && 
                             (
-                                <LikeButton handleLikeDislike={handleLikeDislike}/>
+                                <LikeButton 
+                                    handleLikeDislike={handleLikeDislike}
+                                    likes={state.post.likes}
+                                />
                             )
                         }   
                     </div>
