@@ -18,28 +18,28 @@ const LikeButton:React.FC<IProps> = ({
     handleLikeDislike,
     likes,
 }) => {  
-    console.log("Likes: ", likes)
+  
     /////////////////
     // ZUSTAND //////
     /////////////////
 
     const {userProfile} = useAuthStore();
 
-    /////////////////
-    // STATE  ///////
-    /////////////////
+    //////////////////
+    // STATE  ////////
+    //////////////////
 
-    // const [state, setState] = useState({
-    //     alreadyLiked: likes?.find((like) => like._ref === userProfile?._id) !== undefined,
-    // });
+    const [isAlreadyLiked, setIsAlreadyLiked] = useState(likes?.find((like) => like._ref === userProfile?._id) !== undefined);
 
-    /////////////////
-    // MEMO  ////////
-    /////////////////
 
-    const alreadyLiked = useMemo(() => {
-        return likes?.find((like) => like._ref === userProfile?._id) !== undefined;
-    }, [likes, userProfile?._id]);
+    useEffect(() => {
+        if(isAlreadyLiked && likes?.find((like) => like._ref === userProfile?._id) === undefined) {
+            setIsAlreadyLiked(false);
+        }
+        else if(!isAlreadyLiked && likes?.find((like) => like._ref === userProfile?._id) !== undefined) {
+            setIsAlreadyLiked(true);
+        }
+    }, [isAlreadyLiked, likes, userProfile?._id]);
 
     /////////////////
     // RENDER ///////
@@ -51,15 +51,21 @@ const LikeButton:React.FC<IProps> = ({
         >
             <div className="mt-4 flex flex-col items-center justify-center cursor-pointer">
                 {
-                    alreadyLiked ?
+                    isAlreadyLiked ?
                     <div className="bg-primary rounded-full p-2 md:p-4 text-[#F51197]"
-                        onClick={() => handleLikeDislike(true)}
+                        onClick={() => {
+                            setIsAlreadyLiked(false);
+                            handleLikeDislike(true)
+                        }}
                     >
                         <MdFavorite className="text-lg md:text-2xl" />
                     </div>
                     :
                     <div className="bg-primary rounded-full p-2 md:p-4 "
-                        onClick={() => handleLikeDislike(false)}
+                        onClick={() => {
+                            setIsAlreadyLiked(true);
+                            handleLikeDislike(false)
+                        }}
                     >
                         <MdFavorite className="text-lg md:text-2xl" />
                     </div>

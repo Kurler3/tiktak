@@ -1,7 +1,6 @@
 import create from 'zustand';
 // GONNA USE THIS SO THAT THE STATE REMAINS EVEN AFTER RELOADING THE PAGE (INSTEAD OF USING LOCAL STORAGE)
 import {persist} from 'zustand/middleware';
-import axios from 'axios';
 import { IUser } from '../types';
 
 interface IAuth {
