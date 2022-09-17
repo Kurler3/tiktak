@@ -24,9 +24,7 @@ export interface IUser {
 export interface Comment {
     comment: string;
     _key: string;
-    postedBy: {
-      _ref: string;
-    }
+    postedBy: IPostedBy;
 }
 
 // VIDEO 

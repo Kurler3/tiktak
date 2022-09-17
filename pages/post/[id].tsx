@@ -1,4 +1,4 @@
-import { memo, useState, useEffect, useRef, useCallback } from 'react';
+import React, { memo, useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -47,7 +47,7 @@ interface IProps {
 const PostDetail: NextPage<IProps> = ({
     postDetails,
 }) => {
-
+    
     /////////////
     // ZUSTAND //
     /////////////
@@ -75,6 +75,8 @@ const PostDetail: NextPage<IProps> = ({
         post: postDetails,
         isVideoPlaying: false,
         isVideoMuted: false,
+        newComment: '',
+        isPostingComment: false,
     });
 
 
@@ -158,6 +160,46 @@ const PostDetail: NextPage<IProps> = ({
 
     }, [state.post._id, userProfile]);
 
+    // HANDLE COMMENT INPUT CHANGE
+    const handleCommentChange = useCallback((e:React.ChangeEvent<HTMLInputElement>) => {
+        setState((prevState) => {
+            return {
+                ...prevState,
+                newComment: e.target.value,
+            }
+        });
+    }, []);
+
+    // HANDLE CREATE COMMENT
+    const handleCreateComment = useCallback(async (e:React.SyntheticEvent) => {
+        e.preventDefault();
+
+       if(userProfile && state.newComment!=="") {
+            // SET LOADING 
+            setState((prevState) => ({...prevState, isPostingComment: true}));
+
+            // CALL OWN BACK-END
+            // PUT BECAUSE ITS UPDATING POST
+            const {data} = await axios.put(`${process.env.NEXT_PUBLIC_BASE_URL}/api/post/comment`, {
+                userId: userProfile._id,
+                postId: state.post._id,
+                comment: state.newComment,
+            });
+
+            // UPDATE THE CURRENT STATE AS WELL.
+            setState((prevState) => {
+                return {
+                    ...prevState,
+                    post: {
+                        ...prevState.post,
+                        comments: data.comments,
+                    },
+                    isPostingComment: false,
+                    newComment: '',
+                }
+            });
+       }
+    }, [state.newComment, state.post._id, userProfile]);
 
     ///////////////
     // RENDER /////
@@ -311,7 +353,13 @@ const PostDetail: NextPage<IProps> = ({
                     </div>
 
                     {/* COMMENTS */}
-                    <CommentSection />
+                    <CommentSection 
+                        isPostingComment={state.isPostingComment}
+                        handleCommentChange={handleCommentChange}
+                        commentContent={state.newComment}
+                        comments={state.post.comments ?? []}
+                        handleCreateComment={handleCreateComment}
+                    />
 
                 </div>
             </div>

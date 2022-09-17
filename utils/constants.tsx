@@ -44,3 +44,7 @@ export const footerList3 = [ 'Help', 'Safety', 'Terms', 'Privacy', 'Creator Port
 
 // FILE TYPES AVAILABLE FOR UPLOAD
 export const FILE_TYPES_AVAILABLE = ['video/mp4', 'video/webm', 'video/ogg'];
+
+
+// BASE URL FOR API
+export const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
