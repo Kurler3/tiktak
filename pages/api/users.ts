@@ -13,13 +13,19 @@ export default async function handler(
         
         if(req.method === "GET") {
 
-            const query = allUsersQuery();
             // GET USERS
-            const {data} = await client.fetch(
-                query
+            const data = await client.fetch(
+                allUsersQuery()
             );
 
-            res.status(200).json(data);
+            if(data) {
+                res.status(200).json(data);
+            }
+            else {
+                res.json([]);
+            }
+
+          
 
         }
 

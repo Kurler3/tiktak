@@ -29,7 +29,9 @@ const authStore = (set:any):IAuth => ({
     fetchAllUsers: async () => {
         const response = await axios.get(`${BASE_URL}/api/users`);
 
-        console.log("Response: ", response);
+        set({
+            allUsers: response.data,
+        });
     },
 });
 
