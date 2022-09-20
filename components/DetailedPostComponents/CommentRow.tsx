@@ -7,42 +7,53 @@ import { Comment, IUser } from "../../types";
 // PROPS
 interface IProps {
     comment: Comment;
-    commentAuthor: IUser | null;
+    commentAuthor: IUser;
+    currentUserId: string | null;
 }
 
 ///////////////////
 // COMMENT ROW ////
 ///////////////////
 
-const CommentRow:React.FC<IProps> = ({
+const CommentRow: React.FC<IProps> = ({
     comment,
+    commentAuthor,
+    currentUserId,
 }) => {
-
-    console.log("Comment: ", comment);
     /////////////////
     // RENDER ///////
     /////////////////
 
     return (
-        <div className="border-b border-gray-400 mb-3 flex items-center justify-start p-4">
-            
-           {/* USER PROFILE IMAGE */}
-           {/* <div className='md:w-15 md:h-15 w-12 h-12 ml-4'>
-                            <Link href={`/user/${comment.postedBy._id}`}>
-                                <>
-                                    <Image
-                                        width={62}
-                                        height={62}
-                                        className="rounded-full"
-                                        src={comment.postedBy.image}
-                                        alt="Profile pic"
-                                        layout="responsive"
-                                    />
-                                </>
-                            </Link>
-            </div> */}
+        <div className="border border-gray-300 mb-3 flex items-center justify-start py-4 px-2 rounded-lg shadow-lg">
 
-            <span>{comment.comment}</span>
+            {/* USER PROFILE IMAGE */}
+            <div className='md:w-13 md:h-13 w-10 h-10 cursor-pointer'>
+                <Link href={`/user/${commentAuthor._id}`}>
+                    <>
+                        <Image
+                            width={62}
+                            height={62}
+                            className="rounded-full"
+                            src={commentAuthor.image}
+                            alt="Profile pic"
+                            layout="responsive"
+                        />
+                    </>
+                </Link>
+            </div>
+
+            <span
+                className="ml-2"
+            >
+                {comment.comment}
+            </span>
+
+            {/* DELETE BTN (IF OWNER) */}
+            {
+                currentUserId && comment.postedBy._id === currentUserId ?
+                <div>DELETE</div>
+            :null}
         </div>
     );
 };

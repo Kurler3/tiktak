@@ -54,7 +54,8 @@ const CommentSection:React.FC<IProps> = ({
                                 <CommentRow
                                     key={`comment_section_comment_${comment._key}_${index}`}
                                     comment={comment}
-                                    commentAuthor={commentAuthor ?? null}
+                                    commentAuthor={commentAuthor}
+                                    currentUserId={userProfile?._id ?? null}
                                 />
                             )
                         })}
