@@ -1,12 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, { memo } from "react";
-import { Comment } from "../../types";
+import { Comment, IUser } from "../../types";
 
 
 // PROPS
 interface IProps {
     comment: Comment;
+    commentAuthor: IUser | null;
 }
 
 ///////////////////

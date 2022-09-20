@@ -31,7 +31,7 @@ const CommentSection:React.FC<IProps> = ({
 }) => {
 
     // USER PROFILE
-    const {userProfile} = useAuthStore();
+    const {userProfile, allUsers} = useAuthStore();
 
     /////////////
     // RENDER ///
@@ -46,10 +46,15 @@ const CommentSection:React.FC<IProps> = ({
                     comments.length > 0 ?
                     <div>
                         {comments.map((comment, index) => {
-                            return (
+
+                            const commentAuthor =  allUsers?.find((user) => user._id === comment.postedBy._id)
+
+                            // IF AUTHOR DOES NOT EXIST, THEN DON'T SHOW COMMENT
+                            return !commentAuthor ? null : (
                                 <CommentRow
                                     key={`comment_section_comment_${comment._key}_${index}`}
                                     comment={comment}
+                                    commentAuthor={commentAuthor ?? null}
                                 />
                             )
                         })}

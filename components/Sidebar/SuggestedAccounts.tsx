@@ -39,7 +39,7 @@ const SuggestedAccounts = () => {
 
             <div className='flex flex-col justify-start items-start w-full gap-4'>
               {
-                allUsers.map((user, index) => {
+                allUsers.slice(0, 3).map((user, index) => {
                   return (
                     <div
                       key={`suggested_account_${user._id}_${index}`}
