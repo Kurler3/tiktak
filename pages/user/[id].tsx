@@ -3,7 +3,8 @@ import Image from 'next/image';
 import React, { memo, useMemo, useState } from 'react';
 import { GoVerified } from 'react-icons/go';
 import { IUser, Video } from '../../types';
-
+import VideoCard from '../../components/MainContentComponents/VideoCard';
+import NoResults from '../../components/MainContentComponents/NoResults';
 
 
 interface IProps {
@@ -60,7 +61,7 @@ const UserProfile: React.FC<IProps> = ({
 
     const selectedTabStyle = 'border-b-2 border-blue-800 font-bold text-black mb-1';
 
-    const normalTabStyle = 'cursor-pointer color-gray-300 font-semibold mb-1';
+    const normalTabStyle = 'cursor-pointer color-gray-200 font-medium mb-1';
 
     /////////////////////
     // RENDER ///////////
@@ -98,14 +99,38 @@ const UserProfile: React.FC<IProps> = ({
             
             {/* SELECT TAB */}
             <div className='flex justify-start items-center border-b border-gray-300 gap-4 w-full mt-10 pl-4'>
-                <div className={state.isShowingCreated ? selectedTabStyle : normalTabStyle}>Videos</div>
-                <div className={!state.isShowingCreated ? selectedTabStyle : normalTabStyle}>Liked</div>
+                <div className={state.isShowingCreated ? selectedTabStyle : normalTabStyle}
+                    onClick={() => setState((prevState) => ({...prevState, isShowingCreated: !prevState.isShowingCreated}))}
+                >
+                    Videos
+                </div>
+                <div 
+                    className={!state.isShowingCreated ? selectedTabStyle : normalTabStyle}
+                    onClick={() => setState((prevState) => ({...prevState, isShowingCreated: !prevState.isShowingCreated}))}
+                >
+                        Liked
+                </div>
             </div>
 
             {/* CREATED/LIKED POSTS */}
-            {
+            <div className='w-full flex-1 overflow-auto bg-white'>
+                {
+                  showingPosts.length > 0 ? showingPosts.map((video, index) => {
+                        return (
+                            <VideoCard 
+                                key={`user_profile_video_${video._id}_${index}`}
+                                post={video}
+                            />
+                        )
+                    }) 
+                    : 
+                    <NoResults 
+                        text={`No videos ${state.isShowingCreated ? "created" : "liked"} yet`}
+                    />
+                } 
 
-            }
+            </div>
+           
         </div>
     )
 };

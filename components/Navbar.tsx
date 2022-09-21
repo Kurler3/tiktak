@@ -32,6 +32,9 @@ const Navbar = () => {
     console.log('Error Google');
   }, []);
 
+ // HANDLE SEARCH
+  const handleSearch = useCallback(() => {}, []);
+
 
   //////////////
   // RENDER  ///
@@ -41,19 +44,44 @@ const Navbar = () => {
 
         {/* LOGO LINK */}
         <Link href="/">
-            <div className="w-[100px] md:w-[130px]">
-                <Image 
-                    className='cursor-pointer'
-                    src={Logo}
-                    alt="TikTak"
-                    layout="responsive"
-                />
+            <div className='text-[#F51997] text-[40px] font-bold italic cursor-pointer transition hover:scale-[1.03]'>
+              TikTak
             </div>
         </Link>
 
          
         {/* SEARCH FORM */}
-        <div>Search!</div>
+        <div className='relative hidden md:block'>
+          <form 
+            onSubmit={handleSearch}
+            className="absolute md:static top-10 -left-20 bg-white"
+          >
+            <input 
+              type="text"
+              value=""
+              onChange={() => {}}
+              placeholder="Search accounts and videos"
+              className='bg-primary p-3 md:text-md font-medium border-2 border-gray-100 
+              focus:outline-none 
+              focus:border-2
+              focus:border-gray-300
+              transition
+              w-[300px]
+              md:w-[350px]
+              rounded-full
+              md:top-0
+              '
+            />
+
+            <button type="submit"
+              className='absolute md:right-5 right-6 top-4 border-l-2 border-gray-300 pl-4 text-2xl text-gray-400'
+            >
+              <BiSearch />
+            </button>
+
+
+          </form>
+        </div>
 
         {/* LOGIN/LOGOUT */}
         {
