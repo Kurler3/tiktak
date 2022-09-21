@@ -1,4 +1,4 @@
-import React, {memo, useCallback} from 'react';
+import React, {memo, SyntheticEvent, useCallback, useState} from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {useRouter} from 'next/router';
@@ -18,6 +18,10 @@ const Navbar = () => {
 
   const {userProfile, addUser, logout} = useAuthStore();
 
+  const [state, setState] = useState({
+    searchValue: '',
+  });
+
   //////////////
   // FUNCTIONS//
   //////////////
@@ -33,8 +37,28 @@ const Navbar = () => {
   }, []);
 
  // HANDLE SEARCH
-  const handleSearch = useCallback(() => {}, []);
+  const handleSearch = useCallback((e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
+    // CHECK IF SEARCH VALUE IS NOT EMPTY
+    if(state.searchValue!=="") {
+
+      // PUSH TO SEARCH PAGE!
+      router.push(`/search/${state.searchValue}`);
+
+    }
+  }, [router, state.searchValue]);
+
+
+  // HANDLE CHANGE IN SEARCH BAR
+  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setState((prevState) => {
+      return {
+        ...prevState,
+        searchValue: e.target.value,
+      }
+    });
+  }, []);
 
   //////////////
   // RENDER  ///
@@ -58,8 +82,8 @@ const Navbar = () => {
           >
             <input 
               type="text"
-              value=""
-              onChange={() => {}}
+              value={state.searchValue}
+              onChange={handleSearchChange}
               placeholder="Search accounts and videos"
               className='bg-primary p-3 md:text-md font-medium border-2 border-gray-100 
               focus:outline-none 
