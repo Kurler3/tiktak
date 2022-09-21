@@ -5,6 +5,7 @@ import axios from 'axios';
 import { Video } from '../types';
 import VideoCard from '../components/MainContentComponents/VideoCard';
 import NoResults from '../components/MainContentComponents/NoResults';
+import { BASE_URL } from '../utils/constants';
 
 
 interface Iprops { 
@@ -38,7 +39,7 @@ const Home: NextPage<Iprops> = ({ videos }) => {
 // FETCH MAIN CONTENT
 export const getServerSideProps = async () => {
 
-  const {data} = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/post`);
+  const {data} = await axios.get(`${BASE_URL}/api/post`);
 
   return {
     props: {

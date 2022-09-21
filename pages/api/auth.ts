@@ -11,7 +11,7 @@ export default async function handler(
         if(req.method === "POST") {
             // GET USER DATA PASSED IN AXIOS REQUEST
             const user = req.body;
-
+        
             // CREATE USER IF IT DOESN'T EXIST
             client.createIfNotExists(user)
             .then(() => {

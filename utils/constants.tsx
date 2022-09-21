@@ -47,4 +47,4 @@ export const FILE_TYPES_AVAILABLE = ['video/mp4', 'video/webm', 'video/ogg'];
 
 
 // BASE URL FOR API
-export const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+export const BASE_URL = process.env.NODE_ENV === "development" ? "http://localhost:3000" : process.env.NEXT_PUBLIC_BASE_URL;

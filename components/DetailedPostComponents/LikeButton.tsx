@@ -7,6 +7,7 @@ import useAuthStore from '../../store/authStore';
 interface IProps {
     handleLikeDislike: (isDisliking:boolean) => void;
     likes: any[] | null;
+    isViewMode: boolean;
 }
 
 //////////////////
@@ -17,6 +18,7 @@ interface IProps {
 const LikeButton:React.FC<IProps> = ({
     handleLikeDislike,
     likes,
+    isViewMode,
 }) => {  
   
     /////////////////
@@ -49,11 +51,15 @@ const LikeButton:React.FC<IProps> = ({
         <div
             className="gap-6"
         >
-            <div className="mt-4 flex flex-col items-center justify-center cursor-pointer">
+            <div className="mt-4 flex flex-col items-center justify-center cursor-pointer"
+                style={{
+                    cursor: isViewMode ? 'default' : 'pointer',
+                }}
+            >
                 {
                     isAlreadyLiked ?
                     <div className="bg-primary rounded-full p-2 md:p-4 text-[#F51197]"
-                        onClick={() => {
+                        onClick={isViewMode ? () => {} : () =>  {
                             setIsAlreadyLiked(false);
                             handleLikeDislike(true)
                         }}
@@ -62,7 +68,7 @@ const LikeButton:React.FC<IProps> = ({
                     </div>
                     :
                     <div className="bg-primary rounded-full p-2 md:p-4 "
-                        onClick={() => {
+                        onClick={isViewMode ? () => {} : () => {
                             setIsAlreadyLiked(true);
                             handleLikeDislike(false)
                         }}

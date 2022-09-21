@@ -2,6 +2,7 @@ import { CredentialResponse } from '@react-oauth/google';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import { GoogleDecodedToken } from '../types';
+import { BASE_URL } from './constants';
 
 export const createOrGetUser = async (response: CredentialResponse, addUser: any) => {
   const decoded: GoogleDecodedToken = jwt_decode(response.credential!);
@@ -16,9 +17,8 @@ export const createOrGetUser = async (response: CredentialResponse, addUser: any
     userName: name,
     image: picture,
   };
-  
   // MAKE API CALL TO OWN BACK-END
-  await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth`, user); 
+  await axios.post(`${BASE_URL}/api/auth`, user); 
 
   // API CALL ----- OK
   // ADD TO STATE

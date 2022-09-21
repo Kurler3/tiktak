@@ -5,6 +5,7 @@ import { GoVerified } from 'react-icons/go';
 import { IUser, Video } from '../../types';
 import VideoCard from '../../components/MainContentComponents/VideoCard';
 import NoResults from '../../components/MainContentComponents/NoResults';
+import { BASE_URL } from '../../utils/constants';
 
 
 interface IProps {
@@ -19,7 +20,7 @@ export async function getServerSideProps({
 }: { params: { id: string } }) {
 
     // GET USER DATA
-    const { data: { userData, createdPosts, likedPosts } } = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user/${id}`)
+    const { data: { userData, createdPosts, likedPosts } } = await axios.get(`${BASE_URL}/api/user/${id}`)
 
     return {
         props: {

@@ -19,13 +19,14 @@ import { NextPage } from 'next';
 import useAuthStore from '../../store/authStore';
 import LikeButton from '../../components/DetailedPostComponents/LikeButton';
 import CommentSection from '../../components/DetailedPostComponents/CommentSection';
+import { BASE_URL } from '../../utils/constants';
 
 // USE SERVER SIDE PROPS TO FETCH POST DATA!
 export const getServerSideProps = async ({
     params: { id }
 }: { params: { id: string } }) => {
 
-    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/post/${id}`)
+    const { data } = await axios.get(`${BASE_URL}/api/post/${id}`)
 
     return {
         props: {
@@ -140,7 +141,7 @@ const PostDetail: NextPage<IProps> = ({
         // IF USER EXISTS
         if(userProfile) {
             // USE AXIOS.PUT TO UPDATE POST
-            const {data} = await axios.put(`${process.env.NEXT_PUBLIC_BASE_URL}/api/post/like`, {
+            const {data} = await axios.put(`${BASE_URL}/api/post/like`, {
                 userId: userProfile._id,
                 postId: state.post._id,
                 liking: !isDisliking,
@@ -180,10 +181,11 @@ const PostDetail: NextPage<IProps> = ({
 
             // CALL OWN BACK-END
             // PUT BECAUSE ITS UPDATING POST
-            const {data} = await axios.put(`${process.env.NEXT_PUBLIC_BASE_URL}/api/post/comment`, {
+            const {data} = await axios.put(`${BASE_URL}/api/post/comment`, {
                 userId: userProfile._id,
                 postId: state.post._id,
                 comment: state.newComment,
+                isDelete: false,
             });
 
             // UPDATE THE CURRENT STATE AS WELL.
@@ -201,10 +203,34 @@ const PostDetail: NextPage<IProps> = ({
        }
     }, [state.newComment, state.post._id, userProfile]);
 
+    const handleDeleteComment = useCallback(async (commentId:string) => {
+        try {
+            const {data} = await axios.put(`${BASE_URL}/api/post/comment`, {
+                isDelete: true,
+                commentId: commentId,
+                postId: state.post._id,
+            }); 
+            
+            setState((prevState) => {
+                return {
+                    ...prevState,
+                    post: {
+                        ...prevState.post,
+                        comments: data.comments,
+                    },
+                }
+            });
+        } catch (error) {
+            console.log("Error deleting comment...", error);
+        }
+       
+
+    } ,[state.post._id]);
+
     ///////////////
     // RENDER /////
     ///////////////
-
+    
     return !state.post ? null : (
         <div
             className="flex w-full absolute left-0 top-0 bg-white flex-wrap lg:flex-nowrap"
@@ -341,15 +367,13 @@ const PostDetail: NextPage<IProps> = ({
                     <div
                         className="mt-10 px-10 w-fit"
                     >
-                        {
-                            userProfile && 
-                            (
-                                <LikeButton 
-                                    handleLikeDislike={handleLikeDislike}
-                                    likes={state.post.likes}
-                                />
-                            )
-                        }   
+                        
+                        <LikeButton 
+                            handleLikeDislike={handleLikeDislike}
+                            likes={state.post.likes}
+                            isViewMode={!userProfile}
+                        />
+                        
                     </div>
 
                     {/* COMMENTS */}
@@ -359,6 +383,7 @@ const PostDetail: NextPage<IProps> = ({
                         commentContent={state.newComment}
                         comments={state.post.comments ?? []}
                         handleCreateComment={handleCreateComment}
+                        handleDeleteComment={handleDeleteComment}
                     />
 
                 </div>

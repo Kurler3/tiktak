@@ -4,6 +4,7 @@ import {memo } from 'react';
 import NoResults from '../../components/MainContentComponents/NoResults';
 import VideoCard from '../../components/MainContentComponents/VideoCard';
 import { Video } from '../../types';
+import { BASE_URL } from '../../utils/constants';
 
 
 
@@ -15,7 +16,7 @@ export async function getServerSideProps({
     params: {searchValue}
 } : {params: {searchValue: string}}) {
 
-    const {data} = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/search/${searchValue}`);
+    const {data} = await axios.get(`${BASE_URL}/api/search/${searchValue}`);
 
     return {
         props: {

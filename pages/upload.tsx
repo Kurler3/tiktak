@@ -5,7 +5,7 @@ import {MdDelete} from 'react-icons/md';
 import axios from 'axios';
 import useAuthStore from '../store/authStore';
 import {client} from '../utils/client';
-import { FILE_TYPES_AVAILABLE } from '../utils/constants';
+import { BASE_URL, FILE_TYPES_AVAILABLE } from '../utils/constants';
 import { SanityAssetDocument } from '@sanity/client';
 import {topics} from '../utils/constants';
 
@@ -149,7 +149,7 @@ const Upload = () => {
                 // CALL OWN BACK-END ROUTE!
                 await axios.post( 
                     // URL
-                    `${process.env.NEXT_PUBLIC_BASE_URL}/api/post`,
+                    `${BASE_URL}/api/post`,
                     // DATA
                     newDoc,
                 );

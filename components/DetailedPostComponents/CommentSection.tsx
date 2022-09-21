@@ -16,6 +16,7 @@ interface IProps {
     commentContent: string;
     comments: Comment[];
     handleCreateComment: (e: React.SyntheticEvent) => void;
+    handleDeleteComment: (commentId: string) => void;
 }
 
 //////////////////////
@@ -27,8 +28,10 @@ const CommentSection:React.FC<IProps> = ({
     handleCommentChange,
     commentContent,
     comments,
-    handleCreateComment
+    handleCreateComment,
+    handleDeleteComment,
 }) => {
+
 
     // USER PROFILE
     const {userProfile, allUsers} = useAuthStore();
@@ -36,7 +39,7 @@ const CommentSection:React.FC<IProps> = ({
     /////////////
     // RENDER ///
     /////////////
-
+   
     return (
         <div 
             className='border-t-2 border-gray-200 pt-4 px-10 bg-[#F8F8F8] border-b-2 lg:pb-0 pb-[100px]'    
@@ -46,9 +49,9 @@ const CommentSection:React.FC<IProps> = ({
                     comments.length > 0 ?
                     <div>
                         {comments.map((comment, index) => {
-
-                            const commentAuthor =  allUsers?.find((user) => user._id === comment.postedBy._id)
-
+                            const commentAuthorId = comment.postedBy._id ?? comment.postedBy._ref;
+                            const commentAuthor =  allUsers?.find((user) => user._id ===commentAuthorId)
+                            
                             // IF AUTHOR DOES NOT EXIST, THEN DON'T SHOW COMMENT
                             return !commentAuthor ? null : (
                                 <CommentRow
@@ -56,6 +59,7 @@ const CommentSection:React.FC<IProps> = ({
                                     comment={comment}
                                     commentAuthor={commentAuthor}
                                     currentUserId={userProfile?._id ?? null}
+                                    handleDeleteComment={handleDeleteComment}
                                 />
                             )
                         })}

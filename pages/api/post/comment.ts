@@ -10,32 +10,49 @@ export default async function handler(
     try {
 
         if(req.method === "PUT") {
-            const {
-                userId,
-                postId,
-                comment,
-            } = req.body;
 
-            // ADD COMMENT
+            const isDelete = req.body.isDelete;
 
+            if(isDelete) {
+                const {
+                    commentId,
+                    postId,
+                } = req.body;
 
-            // INSERT IT IN POST
-            const data = await client.patch(postId)
-            .setIfMissing({comments: []})
-            .insert('after', 'comments[-1]', [{
-                comment: comment,
-                _key: uuid(),
-                postedBy: {
-                    _ref: userId,
-                    _type: "postedBy",
-                },
-            }])
-            .commit();
-
-
-            res.status(200).json(data);
+                // const data = await client.patch(postId)
+                // .unset
+            }
+            else {
+                const {
+                    userId,
+                    postId,
+                    comment,
+                } = req.body;
+    
+                // ADD COMMENT
+    
+    
+                // INSERT IT IN POST
+                const data = await client.patch(postId)
+                .setIfMissing({comments: []})
+                .insert('after', 'comments[-1]', [{
+                    comment: comment,
+                    _key: uuid(),
+                    postedBy: {
+                        _ref: userId,
+                        _type: "postedBy",
+                    },
+                }])
+                .commit();
+    
+    
+                res.status(200).json(data);
+            }
+            
         }
+        else if(req.method === "DELETE") {
 
+        }
 
     } catch (error) {
         console.log("Error while liking post....", error);

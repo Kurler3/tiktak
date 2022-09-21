@@ -7,6 +7,7 @@ export interface GoogleDecodedToken {
 
 export interface IPostedBy {
     _id: string;
+    _ref: string;
     userName: string;
     _type: string;
     image: string;
