@@ -8,7 +8,7 @@ export default async function handler(
     res: NextApiResponse,
 ) {
     try {
-
+      
         if(req.method === "PUT") {
 
             const isDelete = req.body.isDelete;
@@ -19,8 +19,11 @@ export default async function handler(
                     postId,
                 } = req.body;
 
-                // const data = await client.patch(postId)
-                // .unset
+                const commentToRemove = [`comments[_key=="${commentId}"]`];
+
+                const data = await client.patch(postId)
+                .unset(commentToRemove).commit();
+                res.status(200).json(data);
             }
             else {
                 const {

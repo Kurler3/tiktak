@@ -210,7 +210,7 @@ const PostDetail: NextPage<IProps> = ({
                 commentId: commentId,
                 postId: state.post._id,
             }); 
-            
+           
             setState((prevState) => {
                 return {
                     ...prevState,
